@@ -31,8 +31,10 @@ class MyApp extends HookWidget {
           child: videoController.when(
             data: (controller) {
               final value = controller.value;
+              final seconds = value.position.inSeconds;
+              final isHorizontal = videoState.isHorizontalDisplay;
               return RotatedBox(
-                quarterTurns: videoState.isHorizontalDisplay ? 1 : 0,
+                quarterTurns: isHorizontal ? 1 : 0,
                 child: AspectRatio(
                   aspectRatio: value.aspectRatio,
                   child: Stack(
@@ -57,16 +59,16 @@ class MyApp extends HookWidget {
                                             : controller.play();
                                         videoNotifier.switchPlayingStatus();
                                       },
-                                      child: Icon(videoState.isPlaying
-                                          ? Icons.pause_outlined
-                                          : Icons.play_arrow_outlined),
+                                      child: Icon(
+                                        videoState.isPlaying
+                                            ? Icons.pause_outlined
+                                            : Icons.play_arrow_outlined,
+                                      ),
                                     ),
                                     GestureDetector(
                                       onTap: () => controller.seekTo(
                                         Duration(
-                                          seconds: controller
-                                                  .value.position.inSeconds -
-                                              10,
+                                          seconds: seconds - 10,
                                         ),
                                       ),
                                       child:
@@ -75,9 +77,7 @@ class MyApp extends HookWidget {
                                     GestureDetector(
                                       onTap: () => controller.seekTo(
                                         Duration(
-                                          seconds: controller
-                                                  .value.position.inSeconds +
-                                              10,
+                                          seconds: seconds + 10,
                                         ),
                                       ),
                                       child:
@@ -85,9 +85,11 @@ class MyApp extends HookWidget {
                                     ),
                                     GestureDetector(
                                       onTap: videoNotifier.switchScreenDisplay,
-                                      child: Icon(videoState.isHorizontalDisplay
-                                          ? Icons.fullscreen_exit_outlined
-                                          : Icons.fullscreen_outlined),
+                                      child: Icon(
+                                        isHorizontal
+                                            ? Icons.fullscreen_exit_outlined
+                                            : Icons.fullscreen_outlined,
+                                      ),
                                     ),
                                   ],
                                 ),
